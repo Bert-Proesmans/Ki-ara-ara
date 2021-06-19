@@ -1,0 +1,62 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Download Ink engine
+        run: |
+          mkdir -p /tmp/ink && 
+          cd /tmp/ink &&
+          curl -L https://github.com/inkle/ink/releases/download/v1.0.0/inklecate_linux.zip > ink.zip &&
+          unzip ink.zip &&
+          chmod +x ./inklecate
+        
+      - name: Download Ink exporting tools
+        run: |
+          mkdir -p /tmp/ink-export &&
+          cd /tmp/ink-export &&
+          git clone --depth 1 https://github.com/inkle/inky.git .
+        
+      - name: Build ink project
+        run: |
+          mkdir -p /tmp/build &&
+          cd /tmp/build &&
+          /tmp/ink/inklecate -o "project.json" "$GITHUB_WORKSPACE/Bone dance.ink" &&
+          printf "var storyContent = \"%s\";" "$(cat "project.json" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')" > project.js
+        
+      - name: Collect page data
+        run: |
+          mkdir -p /tmp/publish &&
+          cd /tmp/publish &&
+          cp /tmp/ink-export/app/export-for-web-template/* ./ &&
+          cp /tmp/build/project.js ./project.js &&
+          sed -i 's~##STORY TITLE##~Bone dance~g' index.html &&
+          sed -i 's~##JAVASCRIPT FILENAME##~project\.js~g' index.html
+        
+      - name: Publish to pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/publish
