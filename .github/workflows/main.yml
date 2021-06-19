@@ -44,7 +44,7 @@ jobs:
           mkdir -p /tmp/build &&
           cd /tmp/build &&
           /tmp/ink/inklecate -o "project.json" "$GITHUB_WORKSPACE/Bone dance.ink" &&
-          printf "var storyContent = \"%s\";" "$(cat "project.json" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')" > project.js
+          printf "var storyContent = %s;" "$(cat "project.json" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')" > project.js
         
       - name: Collect page data
         run: |
