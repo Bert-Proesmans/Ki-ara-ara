@@ -25,7 +25,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Download Ink engine
+      - name: Download Ink template data
         run: |
           mkdir -p /tmp/ink && 
           cd /tmp/ink &&
@@ -38,7 +38,14 @@ jobs:
           mkdir -p /tmp/ink-export &&
           cd /tmp/ink-export &&
           git clone --depth 1 --branch "0.12.0" https://github.com/inkle/inky.git .
-        
+      
+      - name: Download Ink web engine
+        run: |
+          mkdir -p /tmp/ink-web &&
+          cd /tmp/ink-web &&
+          curl -L https://registry.npmjs.org/inkjs/-/inkjs-2.0.0.tgz > inkjs.tgz &&
+          tar -xzf inkjs.tgz
+
       - name: Build ink project
         run: |
           mkdir -p /tmp/build &&
@@ -55,6 +62,7 @@ jobs:
           mkdir -p /tmp/publish &&
           cd /tmp/publish &&
           cp /tmp/ink-export/app/export-for-web-template/* ./ &&
+          cp /tmp/ink-web/package/dist/ink.js ink.js &&
           cp /tmp/build/project.js ./project.js &&
           sed -i 's~##STORY TITLE##~Bone dance~g' index.html &&
           sed -i 's~##JAVASCRIPT FILENAME##~project\.js~g' index.html
