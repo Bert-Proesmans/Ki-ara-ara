@@ -1,5 +1,5 @@
 // Starting point of our story
-VAR START = -> Carriage
+VAR START = -> Entry
 
 // DEBUG mode adds a few shortcuts - remember to set to false in release!
 VAR DEBUG = false
@@ -26,12 +26,20 @@ VAR FEAR = 0
  === function alter(ref x, k)
     ~ x = x + k
 
-== Dream ==
-\  
+// Core storyline
+// 
+// 
 
-== Carriage ==
+== Entry ==
 
-I notice a feint sound of clappering hoofs.
-    * [Wake up]
+// https://twitter.com/kura_noi/status/1406187004023373827/photo/1
+A rythmic clappering thunders across the sky. 
 
-= 
+
+
+I open my eyes.
+The worn down cushions of my seat vibrate into my back. I try to keep myself up straight but whatever i try leads to an uncomfortable position.
+A young, blond, girl is seated on the opposite side of the carriage. I hear her chuckle.
+With obvious discomfort visible on my face I look her in the eyes.
+She doesn't say anything, just showing a smile from ear to ear.
+-> DONE
