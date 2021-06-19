@@ -37,13 +37,17 @@ jobs:
         run: |
           mkdir -p /tmp/ink-export &&
           cd /tmp/ink-export &&
-          git clone --depth 1 https://github.com/inkle/inky.git .
+          git clone --depth 1 --branch "0.12.0" https://github.com/inkle/inky.git .
         
       - name: Build ink project
         run: |
           mkdir -p /tmp/build &&
           cd /tmp/build &&
           /tmp/ink/inklecate -o "project.json" "$GITHUB_WORKSPACE/Bone dance.ink" &&
+          # Removing UTF BOM, if present, to not introduce some parsing errors
+          sed -i $'1s/^\uFEFF//' "project.json" &&
+          # JSON payload is packaged into javascript file to drive the Ink engine
+          # NOTE; Inline command with Python is used as this doesn't require special dependencies
           printf "var storyContent = %s;" "$(cat "project.json" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))')" > project.js
         
       - name: Collect page data
