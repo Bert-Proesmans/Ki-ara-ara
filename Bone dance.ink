@@ -28,7 +28,18 @@ VAR FEAR = 0
 
 // Core storyline
 // 
-// 
+// Local setting
+// - Tropical climate
+// - Forrest
+// - Beach
+// - Kiara
+// - Overpowered Calli
+// - Gura as guest, great white shark form
+//
+// Global setting
+// - Kiara is a direct spawn of existence
+// - Reapers are endangered because of clashing realities
+// - It looks like a good-bad fight
 
 == Entry ==
 
